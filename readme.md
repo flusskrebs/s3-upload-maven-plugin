@@ -35,7 +35,8 @@ Example: Upload a file
         <bucketName>my-s3-bucket</bucketName>
         <source>dir/filename.txt</source>
         <destination>remote-dir/remote-filename.txt</destination>
-        <
+        <proxyhost>proxy.company.com</proxyhost>
+        <proxyport>3128</proxyport>
       </configuration>
     </plugin>
   </plugins>
