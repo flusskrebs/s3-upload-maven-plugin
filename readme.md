@@ -15,6 +15,8 @@ Configuration parameters
 |secretKey|S3 secret key | *no* | if unspecified, uses the Default Provider, falling back to env variables |
 |doNotUpload|Dry run| *no* | false |
 |endpoint|Use a different s3 endpoint| *no* | s3.amazonaws.com |
+|proxyhost|hostname of http/https proxy| *no* | empty |
+|proxyport|portnumber of the proxy| *no* | 0 |
 
 Example: Upload a file
 ----------------------
@@ -33,6 +35,7 @@ Example: Upload a file
         <bucketName>my-s3-bucket</bucketName>
         <source>dir/filename.txt</source>
         <destination>remote-dir/remote-filename.txt</destination>
+        <
       </configuration>
     </plugin>
   </plugins>

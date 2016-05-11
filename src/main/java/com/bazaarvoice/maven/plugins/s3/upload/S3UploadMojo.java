@@ -1,5 +1,6 @@
 package com.bazaarvoice.maven.plugins.s3.upload;
 
+import com.amazonaws.ClientConfiguration;
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
@@ -59,6 +60,18 @@ public class S3UploadMojo extends AbstractMojo
   @Parameter(property = "s3-upload.recursive", defaultValue = "false")
   private boolean recursive;
 
+  /** Proxyhost */
+  @Parameter(property = "s3-upload.proxyhost", defaultValue = "unkownproxyhost")
+  private String proxyhost;
+
+  /** Proxyport */
+  @Parameter(property = "s3-upload.proxyport", defaultValue = "0")
+  private int proxyport;
+  
+
+  
+  
+  
   @Override
   public void execute() throws MojoExecutionException
   {
@@ -66,7 +79,7 @@ public class S3UploadMojo extends AbstractMojo
       throw new MojoExecutionException("File/folder doesn't exist: " + source);
     }
 
-    AmazonS3 s3 = getS3Client(accessKey, secretKey);
+    AmazonS3 s3 = getS3Client(accessKey, secretKey, proxyhost, proxyport);
     if (endpoint != null) {
       s3.setEndpoint(endpoint);
     }
@@ -91,7 +104,7 @@ public class S3UploadMojo extends AbstractMojo
             source, bucketName, destination));
   }
 
-  private static AmazonS3 getS3Client(String accessKey, String secretKey)
+  private static AmazonS3 getS3Client(String accessKey, String secretKey, String proxyHost, int proxyPort)
   {
     AWSCredentialsProvider provider;
     if (accessKey != null && secretKey != null) {
@@ -101,7 +114,13 @@ public class S3UploadMojo extends AbstractMojo
       provider = new DefaultAWSCredentialsProviderChain();
     }
 
-    return new AmazonS3Client(provider);
+    ClientConfiguration clientCfg = new ClientConfiguration();
+    if(proxyHost != null) {
+    	//setup proxy connection:
+    	clientCfg.setProxyHost(proxyHost);
+    	clientCfg.setProxyPort(proxyPort);
+    }
+    return new AmazonS3Client(provider,clientCfg);
   }
 
   private boolean upload(AmazonS3 s3, File sourceFile) throws MojoExecutionException
